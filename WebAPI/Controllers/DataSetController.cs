@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
             {
                 return _dataElementManager.GetAllByFunction();
             }
-            return null;
+            return _dataElementManager.GetAll();
         }
     }
 }

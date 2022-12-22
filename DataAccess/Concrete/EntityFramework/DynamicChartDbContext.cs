@@ -16,10 +16,6 @@ namespace DataAccess.Concrete.EntityFramework
         {
             optionsBuilder.UseSqlServer(ConnectionString.Get());
         }
-        //protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-        //{
-        //    configurationBuilder.DefaultTypeMapping<DataElement>();
-        //}
         public DbSet<DataElement> DataSets { get; set; }
         public DbSet<GetDataElementView> vwGetDatas { get; set; }
     }
