@@ -19,7 +19,11 @@ namespace DataAccess.Concrete.SqlConnect
         {
             List<DataElement> dataElements = new List<DataElement>();
             string commandText = "";
-            if(property.dataTypeName == "proc")
+            if (property.dataTypeName == "table")
+            {
+                commandText = $"select * from {property.dataTypeValue}";
+            }
+            else if (property.dataTypeName == "proc")
             {
                 commandText = $"exec {property.dataTypeValue}";
             }
@@ -119,6 +123,11 @@ namespace DataAccess.Concrete.SqlConnect
                 using (SqlConnection _con = new SqlConnection(ConnectionString.GetScConnectionString()))
                 {
                     _con.Open();
+                    DataTable tables = _con.GetSchema("Tables", new string[] { null, null, null, "BASE TABLE" });
+                    foreach (DataRow table in tables.Rows)
+                    {
+                        Properties.Add(new Property {dataTypeName = "table", dataTypeValue = (string)table[2] });
+                    }
                     using (var _cmd = new SqlCommand() { Connection = _con, CommandText = "SELECT OBJECT_NAME(sys.sql_modules.object_id), OBJECT_DEFINITION(sys.sql_modules.object_id) FROM sys.sql_modules" })
                     {              
                         SqlDataReader reader = _cmd.ExecuteReader();
