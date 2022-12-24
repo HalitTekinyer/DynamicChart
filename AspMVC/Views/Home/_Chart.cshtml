@@ -1,0 +1,26 @@
+﻿@model GetChartReturnModel
+<div class="mb3 mt-5" style="margin-inline:20%">
+    <canvas id="chart"></canvas>
+</div>
+@if (Model.formPosted == true)
+{
+    <script>
+        $(document).ready(function () {
+            const ctx = document.getElementById('chart');
+            new Chart(ctx, {
+                type: '@Model.chartTypeModel.chartType',
+                data: {
+                    labels: eval('@Model.dataSetLabels'.replaceAll('&quot;', '"')),
+                    datasets: eval('@Model.dataSets'.replaceAll('&quot;', '"'))
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            })
+        })
+    </script>
+}

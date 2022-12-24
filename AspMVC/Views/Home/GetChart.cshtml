@@ -1,64 +1,65 @@
-﻿@model GetChartReturnModel
+﻿@model List<string>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.1/chart.umd.js" integrity="sha512-+Aecf3QQcWkkA8IUdym4PDvIP/ikcKdp4NCDF8PM6qr9FtqwIFCS3JAcm2+GmPMZvnlsrGv1qavSnxL8v+o86w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <div class="mb3 mt-5" style="margin-inline:25%">
     <h1 class="display-6 text-center mb-3">Dynamic Chart Application</h1>
-    <form method="post" id="configurationForm">
-        <select class="form-select my-4" name="dataType" id="dataType">
-            <option value="default" id="default" name="default">Select in object</option>
-            <option value="sp" id="sp" name="sp">spSatisRaporu</option>
-            <option value="vw" id ="vw" name="vw">vwSatisRaporu</option>
-            <option value="fn" id="fn" name="fn">fnSatisRaporu</option>
-        </select>
-        <select class="form-select my-4" name="chartType" id="chartType">
-            <option value="default" id="default" name="default">Select in chart type</option>
-            <option value="line" id="line" name="line">Line Chart</option>
-            <option value="bar" id="bar" name="bar">Bar Chart</option>
-            <option value="radar" id="radar" name="radar">Radar Chart</option>
-        </select>
-    </form>
+    <div id="loader" style="visibility: hidden; margin:0px;"><p style="margin:0px;">Database is loading please wait...</p></div>
+    @Html.DropDownList("databaseName", new SelectList(Model.Select(item => (Model.First() != item) ?new { Value = item, Text = item}: new {Value = "default", Text = "Select in databases"}),"Value","Text") , new {@class = "form-select mb-4 mt-1"})
+    <div id="dataTypePartialView"></div>
+    <select class="form-select my-4" name="chartType" id="chartType" style="visibility: hidden;">
+        <option value="default" id="default" name="default">Select in chart type</option>
+        <option value="line" id="line" name="line">Line Chart</option>
+        <option value="bar" id="bar" name="bar">Bar Chart</option>
+        <option value="radar" id="radar" name="radar">Radar Chart</option>
+    </select>
 </div>
+<div id="chartPartialView"></div>
 <div class="mb3 mt-5" style="margin-inline:20%">
     <canvas id="chart"></canvas>
 </div>
 <script>
     $(document).ready(function () {
-        function submitForm(){
-            if ((document.getElementById("dataType").value != 'default') && (document.getElementById("chartType").value != 'default')) {
-                $('#configurationForm').submit();
+        function getChart() {
+            let dataTypeNodeInFunc = document.getElementById("dataType");
+            let dataTypeNameInFunc = dataTypeNodeInFunc.value;
+            let dataTypeSelectedIndexInFunc = dataTypeNodeInFunc.selectedIndex;
+            let dataTypeValueInFunc = dataTypeNodeInFunc.options[dataTypeSelectedIndexInFunc].text;
+            let chartTypeInFunc = document.getElementById("chartType").value;
+            if ((dataTypeNameInFunc != 'default') && (chartTypeInFunc != 'default')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Content("/Home/Chart")',
+                    data: {
+                        dataTypeName: dataTypeNameInFunc,
+                        dataTypeValue: dataTypeValueInFunc,
+                        chartType: chartTypeInFunc
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#chartPartialView').html(result);
+                    }
+                });
             }
         }
-        $('#chartType').change(submitForm);
-        $('#dataType').change(submitForm);
+        $('#chartType').change(getChart);
+        $('#databaseName').change(function(){
+            let databaseNameElement = document.getElementById("databaseName");
+            if (databaseNameElement.SelectedIndex != 0){
+                document.getElementById("loader").style.visibility = "visible";
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Content("/Home/DataType")',
+                    data: {
+                        DatabaseName: databaseNameElement.value
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#dataTypePartialView').html(result);
+                        document.getElementById("chartType").style.visibility = "visible";
+                        document.getElementById("loader").style.visibility = "hidden";
+                    }
+                });
+            }
+        });
     })
 </script>
-@if (Model.formPosted == true)
-{
-    <script>
-        $(document).ready(function () {
-            document.getElementById("dataType").value = '@Model.chartTypeModel.dataType';
-            document.getElementById("chartType").value = '@Model.chartTypeModel.chartType';
-        })
-    </script>
-    <script>
-        $(document).ready(function () {
-            const ctx = document.getElementById('chart');
-            console.log('@Model.dataSets'.replaceAll('&quot;','"'));
-            console.log('@Model.dataSetLabels');
-            new Chart(ctx, {
-                type: '@Model.chartTypeModel.chartType',
-                data: {
-                    labels: eval('@Model.dataSetLabels'.replaceAll('&quot;', '"')),
-                    datasets: eval('@Model.dataSets'.replaceAll('&quot;', '"'))
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            })
-        })
-    </script>
-}

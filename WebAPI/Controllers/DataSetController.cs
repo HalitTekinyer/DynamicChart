@@ -16,26 +16,14 @@ namespace WebAPI.Controllers
             _dataElementManager = new DataElementManager(dataElementDal);
         }
         [HttpGet]
-        public List<DataElement> Get()
+        public List<Property> Get()
         {
-            return _dataElementManager.GetAll();
+            return _dataElementManager.GetPropertyNames();
         }
         [HttpPost]
-        public List<DataElement> Post([FromBody]string dataType)
+        public List<DataElement> Post([FromBody]Property property)
         {
-            if (dataType == "sp")
-            {
-                return _dataElementManager.GetAllByStoredProcedure();
-            }
-            else if(dataType == "vw")
-            {
-                return _dataElementManager.GetAllByView();
-            }
-            else if (dataType == "fn")
-            {
-                return _dataElementManager.GetAllByFunction();
-            }
-            return _dataElementManager.GetAll();
+            return _dataElementManager.Get(property);
         }
     }
 }

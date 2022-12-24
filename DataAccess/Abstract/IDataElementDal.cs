@@ -10,10 +10,13 @@ namespace DataAccess.Abstract
 {
     public interface IDataElementDal
     {
+        public List<DataElement> Get(Property property);
         public List<DataElement> GetAll();
         public List<GetDataElementView> GetAllByView();
         public List<DataElement> GetAllByStoredProcedure();
         public List<DataElement> GetAllByFunction();
         public bool TryConnection();
+        public List<string> GetDatabaseNames();
+        public List<Property> GetPropertyNames();
     }
 }

@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
             _dataElementManager = new DataElementManager(dataElementDal);
         }
         [HttpPost]
-        public IActionResult post([FromBody]ConnectionStringTemplate connectionStringTemplate)
+        public IActionResult Post([FromBody]ConnectionStringTemplate connectionStringTemplate)
         {
             try
             {
@@ -28,7 +28,23 @@ namespace WebAPI.Controllers
                 ConnectionString.Password = connectionStringTemplate.Password;
                 if (_dataElementManager.TryConnection())
                 {
-                    return new OkResult();
+                    return new OkObjectResult(_dataElementManager.GetDatabaseNames());
+                }
+                return new BadRequestResult();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
+            {
+                if (_dataElementManager.TryConnection())
+                {
+                    return new OkObjectResult(new {ConnectionString.ServerIp, ConnectionString.DatabaseName, ConnectionString.User, ConnectionString.Password });
                 }
                 return new BadRequestResult();
             }

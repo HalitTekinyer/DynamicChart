@@ -9,10 +9,13 @@ namespace Business.Abstract
 {
     public interface IDataElementManager
     {
+        public List<DataElement> Get(Property property);
         public List<DataElement> GetAll();
         public List<DataElement> GetAllByView();
         public List<DataElement> GetAllByStoredProcedure();
         public List<DataElement> GetAllByFunction();
         public bool TryConnection();
+        public List<string> GetDatabaseNames();
+        public List<Property> GetPropertyNames();
     }
 }

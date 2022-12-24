@@ -1,0 +1,5 @@
+﻿@model List<DatabasePropertyModel>
+@{
+    IEnumerable<object> firstItem = new Object[] { new { Value = "default", Text = "Select in object" }};
+}
+@Html.DropDownList("dataType", new SelectList(firstItem.Concat(Model.Select(item => new { Value = item.dataTypeName,  Text = item.dataTypeValue})) ,"Value","Text") , new {@class = "form-select my-4"})

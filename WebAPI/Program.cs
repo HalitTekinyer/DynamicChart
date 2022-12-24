@@ -1,4 +1,5 @@
 using DataAccess.Abstract;
+using DataAccess.Concrete.SqlConnect;
 using DataAccess.Concrete.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IDataElementDal>(new EFDataElementDal());
+builder.Services.AddSingleton<IDataElementDal>(new SCDataElementDal());
 
 var app = builder.Build();
 

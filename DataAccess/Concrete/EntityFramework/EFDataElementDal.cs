@@ -57,5 +57,20 @@ namespace DataAccess.Concrete.EntityFramework
                 return false;
             }
         }
+
+        public List<string> GetDatabaseNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Property> GetPropertyNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<DataElement> Get(Property property)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

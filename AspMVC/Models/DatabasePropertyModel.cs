@@ -1,9 +1,8 @@
 ﻿namespace AspMVC.Models
 {
-    public class ChartTypeModel
+    public class DatabasePropertyModel
     {
         public string dataTypeName { get; set; }
         public string dataTypeValue { get; set; }
-        public string chartType { get; set; }
     }
 }

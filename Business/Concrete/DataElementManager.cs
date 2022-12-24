@@ -16,7 +16,10 @@ namespace Business.Concrete
         {
             _dataElementDal = dataElementDal;
         }
-
+        public List<DataElement> Get(Property property)
+        {
+            return _dataElementDal.Get(property);
+        }
         public List<DataElement> GetAll()
         {
             return _dataElementDal.GetAll();
@@ -50,6 +53,14 @@ namespace Business.Concrete
         public bool TryConnection()
         {
             return _dataElementDal.TryConnection();
+        }
+        public List<string> GetDatabaseNames()
+        {
+            return _dataElementDal.GetDatabaseNames();
+        }
+        public List<Property> GetPropertyNames()
+        {
+            return _dataElementDal.GetPropertyNames();
         }
     }
 }

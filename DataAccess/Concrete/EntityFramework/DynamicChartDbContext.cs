@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString.Get());
+            optionsBuilder.UseSqlServer(ConnectionString.GetEfConnectionString());
         }
         public DbSet<DataElement> DataSets { get; set; }
         public DbSet<GetDataElementView> vwGetDatas { get; set; }
