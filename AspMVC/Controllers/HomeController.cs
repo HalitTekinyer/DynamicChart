@@ -44,11 +44,11 @@ namespace AspMVC.Controllers
         {
             using (HttpClient client = new HttpClient())
             {
-                DataTypeModel dataTypeModel = new DataTypeModel() {dataTypeName = chartTypeModelInMethod.dataTypeName, dataTypeValue = chartTypeModelInMethod.dataTypeValue };
+                DatabasePropertyModel databasePropertyModel = new DatabasePropertyModel() {dataTypeName = chartTypeModelInMethod.dataTypeName, dataTypeValue = chartTypeModelInMethod.dataTypeValue };
                 GetChartReturnModel returnModel = new GetChartReturnModel();
                 returnModel.chartTypeModel = chartTypeModelInMethod;
                 var endpoint = "https://localhost:44369/DataSet";
-                var response = client.PostAsJsonAsync(endpoint, dataTypeModel);
+                var response = client.PostAsJsonAsync(endpoint, databasePropertyModel);
                 response.Wait();
                 if (response.Result.IsSuccessStatusCode)
                 {
