@@ -3,3 +3,30 @@
     IEnumerable<object> firstItem = new Object[] { new { Value = "default", Text = "Select in object" }};
 }
 @Html.DropDownList("dataType", new SelectList(firstItem.Concat(Model.Select(item => new { Value = item.dataTypeName,  Text = item.dataTypeValue})) ,"Value","Text") , new {@class = "form-select my-4"})
+<script>
+    $(document).ready(function(){
+        function getChart() {
+            let dataTypeNodeInFunc = document.getElementById("dataType");
+            let dataTypeNameInFunc = dataTypeNodeInFunc.value;
+            let dataTypeSelectedIndexInFunc = dataTypeNodeInFunc.selectedIndex;
+            let dataTypeValueInFunc = dataTypeNodeInFunc.options[dataTypeSelectedIndexInFunc].text;
+            let chartTypeInFunc = document.getElementById("chartType").value;
+            if ((dataTypeNameInFunc != 'default') && (chartTypeInFunc != 'default')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Content("/Home/Chart")',
+                    data: {
+                        dataTypeName: dataTypeNameInFunc,
+                        dataTypeValue: dataTypeValueInFunc,
+                        chartType: chartTypeInFunc
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#chartPartialView').html(result);
+                    }
+                });
+            }
+        }
+        $("#dataType").change(getChart);
+    })
+</script>
